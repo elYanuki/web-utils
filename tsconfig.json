@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "ES2022",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "target": "es2017",
+    "lib": [
+      "es2017",
+      "dom",
+      "scripthost"
+    ]
+  },
+  "files": [
+    "index.ts",
+    "src/**/*.ts"
+  ]
+}
