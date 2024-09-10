@@ -63,12 +63,22 @@ class wuColor {
      * @param color
      */
     static calculateContrastColor(color) {
+        let luminance = this.calculateLuminance(this.anyToRgb(color));
+        return luminance < 0.5 ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 };
+    }
+    /**
+     * calculates the luminance of a given color this is different from the lightness in hsl as it takes into account how the human eye perceives brightness
+     * @param color
+     */
+    static calculateLuminance(color) {
         let rgb = this.anyToRgb(color);
-        let sRGB = this.rgbToSrgb(rgb);
-        const luminance = 0.2126 * sRGB.r + 0.7152 * sRGB.g + 0.0722 * sRGB.b;
-        const contrastWhite = (1.0 + 0.05) / (luminance + 0.05);
-        const contrastBlack = (luminance + 0.05) / 0.05;
-        return contrastWhite > contrastBlack ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 };
+        let a = [rgb.r, rgb.g, rgb.b].map(function (v) {
+            v /= 255;
+            return v <= 0.03928
+                ? v / 12.92
+                : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
     }
     /**
      * generates a random color within the given ranges, each range is a array with a minimum and maximum value
@@ -180,12 +190,6 @@ class wuColor {
     }
     static rgbToHex(rgb) {
         return `#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1).toUpperCase()}`;
-    }
-    static rgbToSrgb(rgb) {
-        let r = rgb.r <= 0.03928 ? rgb.r / 12.92 : Math.pow((rgb.r + 0.055) / 1.055, 2.4);
-        let g = rgb.g <= 0.03928 ? rgb.g / 12.92 : Math.pow((rgb.g + 0.055) / 1.055, 2.4);
-        let b = rgb.b <= 0.03928 ? rgb.b / 12.92 : Math.pow((rgb.b + 0.055) / 1.055, 2.4);
-        return { r: r, g: g, b: b };
     }
     //endregion
     static anyToString(color) {

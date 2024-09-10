@@ -52,6 +52,11 @@ export declare class wuColor {
      */
     static calculateContrastColor(color: anyColor): rgbColor;
     /**
+     * calculates the luminance of a given color this is different from the lightness in hsl as it takes into account how the human eye perceives brightness
+     * @param color
+     */
+    static calculateLuminance(color: anyColor): number;
+    /**
      * generates a random color within the given ranges, each range is a array with a minimum and maximum value
      * if only a single value is supplied it will be used as a fixed value
      * if no value is supplied the full range will be used
@@ -81,6 +86,5 @@ export declare class wuColor {
     static hslToRgb(hsl: hslColor): rgbColor;
     static rgbToHsl(rgb: rgbColor): hslColor;
     static rgbToHex(rgb: rgbColor): string;
-    static rgbToSrgb(rgb: rgbColor): rgbColor;
     static anyToString(color: anyColor): string;
 }

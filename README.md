@@ -32,7 +32,6 @@ All the functions accept the type `anyColor` which can be a string, rgbColor or 
 - `hslToRgb(hsl: hslColor): rgbColor`
 - `rgbToHex(rgb: rgbColor): string`
 - `rgbToHSL(rgb: rgbColor): hslColor`
-- `rgbToSrgb(rgb: rgbColor): rgbColor`
 - `anyToString(color: anyColor):string`
 
 ## example
