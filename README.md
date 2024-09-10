@@ -19,6 +19,7 @@ All the functions accept the type `anyColor` which can be a string, rgbColor or 
 - `correctHslColor(hsl: hslColor): hslColor`
 - `correctRgbColor(rgb: rgbColor): rgbColor`
 - `correctHexColor(hex: string): string`
+- `calculateLuminance(color: anyColor): number`
 
 ### generate color
 

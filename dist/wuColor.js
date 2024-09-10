@@ -154,38 +154,79 @@ class wuColor {
         return { r: r, g: g, b: b };
     }
     static hslToRgb(hsl) {
-        hsl.s /= 100;
-        hsl.l /= 100;
-        const k = (n) => (n + hsl.h / 30) % 12;
-        const a = hsl.s * Math.min(hsl.l, 1 - hsl.l);
-        const f = (n) => hsl.l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-        return {
-            r: Math.round(f(0) * 255),
-            g: Math.round(f(8) * 255),
-            b: Math.round(f(4) * 255)
-        };
+        let c = (1 - Math.abs(2 * hsl.l - 1)) * hsl.s, x = c * (1 - Math.abs((hsl.h / 60) % 2 - 1)), m = hsl.l - c / 2, r = 0, g = 0, b = 0;
+        if (0 <= hsl.h && hsl.h < 60) {
+            r = c;
+            g = x;
+            b = 0;
+        }
+        else if (60 <= hsl.h && hsl.h < 120) {
+            r = x;
+            g = c;
+            b = 0;
+        }
+        else if (120 <= hsl.h && hsl.h < 180) {
+            r = 0;
+            g = c;
+            b = x;
+        }
+        else if (180 <= hsl.h && hsl.h < 240) {
+            r = 0;
+            g = x;
+            b = c;
+        }
+        else if (240 <= hsl.h && hsl.h < 300) {
+            r = x;
+            g = 0;
+            b = c;
+        }
+        else if (300 <= hsl.h && hsl.h < 360) {
+            r = c;
+            g = 0;
+            b = x;
+        }
+        r = Math.round((r + m) * 255);
+        g = Math.round((g + m) * 255);
+        b = Math.round((b + m) * 255);
+        return { r: r, g: g, b: b };
     }
     //endregion
     //region from rgb to other
     static rgbToHsl(rgb) {
-        let r = rgb.r / 255;
-        let g = rgb.b / 255;
-        let b = rgb.g / 255;
-        let max = Math.max(r, g, b);
-        let min = Math.min(r, g, b);
-        let d = max - min;
-        let h;
-        if (d === 0)
+        // convert %s to 0–255
+        for (let R in rgb) {
+            let r = rgb[R];
+            if (r.indexOf("%") > -1)
+                rgb[R] = Math.round(r.substr(0, r.length - 1) / 100 * 255);
+        }
+        // make r, g, and b fractions of 1
+        let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, 
+        // find greatest and smallest channel values
+        cmin = Math.min(r, g, b), cmax = Math.max(r, g, b), delta = cmax - cmin, h = 0, s = 0, l = 0;
+        // calculate hue
+        // no difference
+        if (delta == 0)
             h = 0;
-        else if (max === r)
-            h = (g - b) / d % 6;
-        else if (max === g)
-            h = (b - r) / d + 2;
-        else if (max === b)
-            h = (r - g) / d + 4;
-        h = h * 60;
-        let l = (min + max) / 2;
-        let s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+        // red is max
+        else if (cmax == r)
+            h = ((g - b) / delta) % 6;
+        // green is max
+        else if (cmax == g)
+            h = (b - r) / delta + 2;
+        // blue is max
+        else
+            h = (r - g) / delta + 4;
+        h = Math.round(h * 60);
+        // make negative hues positive behind 360°
+        if (h < 0)
+            h += 360;
+        // calculate lightness
+        l = (cmax + cmin) / 2;
+        // calculate saturation
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+        // multiply l and s by 100
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
         return { h: h, s: s, l: l };
     }
     static rgbToHex(rgb) {
