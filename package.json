@@ -1,0 +1,20 @@
+{
+  "name": "@yanikkendler/web-utils",
+  "version": "1.0.2",
+  "description": "a collection of utility functions for web development in js/ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elYanuki/web-utils.git"
+  },
+  "author": "yanik kendler",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/elYanuki/web-utils/issues"
+  },
+  "homepage": "https://github.com/elYanuki/web-utils#readme"
+}
