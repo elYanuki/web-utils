@@ -193,12 +193,7 @@ class wuColor {
     //endregion
     //region from rgb to other
     static rgbToHsl(rgb) {
-        // convert %s to 0–255
-        for (let R in rgb) {
-            let r = rgb[R];
-            if (r.indexOf("%") > -1)
-                rgb[R] = Math.round(r.substr(0, r.length - 1) / 100 * 255);
-        }
+        rgb.r = Math.round(rgb.r / 100 * 255);
         // make r, g, and b fractions of 1
         let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, 
         // find greatest and smallest channel values
