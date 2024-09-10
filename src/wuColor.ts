@@ -94,7 +94,7 @@ export class wuColor{
      * calculates the luminance of a given color this is different from the lightness in hsl as it takes into account how the human eye perceives brightness
      * @param color
      */
-    static calculateLuminance(color: anyColor) {
+    static calculateLuminance(color: anyColor):number {
         let rgb = this.anyToRgb(color)
 
         let a = [rgb.r, rgb.g, rgb.b].map(function (v) {
