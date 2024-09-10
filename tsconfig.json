@@ -1,6 +1,8 @@
+/*
 {
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -10,10 +12,24 @@
       "es2017",
       "dom",
       "scripthost"
-    ]
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
-  "files": [
-    "index.ts",
-    "src/**/*.ts"
+  "include": [
+    "*.ts"
+  ]
+}*/
+
+
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2019",
+    "declaration": true,
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/**/*"
   ]
 }

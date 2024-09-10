@@ -1,26 +1,67 @@
-import { wuText } from "./wuText.js";
-export class wuColor {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.wuColor = void 0;
+const wuText_1 = require("./wuText");
+//TODO blend modes
+/**
+ * Functions for converting, manipulating and generating colors
+ *
+ * The class supports hex, rgb and hsl colors. For hex and rgb, interfaces are provided that represent a json with r, g, b and h, s, l respectively
+ * All the functions accept the type "anyColor" which can be a string, rgbColor or hslColor and will return a rgbColor
+ */
+class wuColor {
+    /**
+     * shifts the hue of a given color by a given amount
+     * enter a negative number to decrease the hue
+     * this function works in hsl so the maximum hue is 360 and the minimum is 0
+     *
+     * @param color any color
+     * @param amount any number
+     * @param wrap whether to wrap the hue around once the maximum is reached (361 -> 0 and -1 -> 360, -2 -> 359 etc.)
+     */
     static shiftHue(color, amount, wrap = false) {
         let hsl = this.rgbToHsl(this.anyToRgb(color));
         hsl.h = hsl.h + amount;
         if (wrap)
-            hsl.h = wuText.wrapNumber(hsl.h, 0, 360);
+            hsl.h = wuText_1.wuText.wrapNumber(hsl.h, 0, 360);
         return this.hslToRgb(this.correctHslColor(hsl));
     }
+    /**
+     * shifts the saturation of a given color by a given amount
+     * enter a negative number to decrease the saturation
+     * this function works in hsl so the maximum saturation is 100 and the minimum is 0
+     *
+     * @param color
+     * @param amount
+     * @param wrap whether to wrap the saturation around once the maximum is reached (101 -> 0 and -1 -> 100)
+     */
     static shiftSaturation(color, amount, wrap = false) {
         let hsl = this.rgbToHsl(this.anyToRgb(color));
         hsl.s = hsl.s + amount;
         if (wrap)
-            hsl.l = wuText.wrapNumber(hsl.l, 0, 100);
+            hsl.l = wuText_1.wuText.wrapNumber(hsl.l, 0, 100);
         return this.hslToRgb(this.correctHslColor(hsl));
     }
+    /**
+     * shifts the lightness of a given color by a given amount
+     * enter a negative number to decrease the lightness
+     * this function works in hsl so the maximum lightness is 100 and the minimum is 0
+     *
+     * @param color any color
+     * @param amount any number
+     * @param wrap whether to wrap the lightness around once the maximum is reached (101 -> 0 and -1 -> 100)
+     */
     static shiftLightness(color, amount, wrap = false) {
         let hsl = this.rgbToHsl(this.anyToRgb(color));
         hsl.l = hsl.l + amount;
         if (wrap)
-            hsl.l = wuText.wrapNumber(hsl.l, 0, 100);
+            hsl.l = wuText_1.wuText.wrapNumber(hsl.l, 0, 100);
         return this.hslToRgb(this.correctHslColor(hsl));
     }
+    /**
+     * returns black or white depending on which color would have the best contrast to the given color
+     * @param color
+     */
     static calculateContrastColor(color) {
         let rgb = this.anyToRgb(color);
         let sRGB = this.rgbToSrgb(rgb);
@@ -29,6 +70,14 @@ export class wuColor {
         const contrastBlack = (luminance + 0.05) / 0.05;
         return contrastWhite > contrastBlack ? { r: 255, g: 255, b: 255 } : { r: 0, g: 0, b: 0 };
     }
+    /**
+     * generates a random color within the given ranges, each range is a array with a minimum and maximum value
+     * if only a single value is supplied it will be used as a fixed value
+     * if no value is supplied the full range will be used
+     * @param hueRange
+     * @param saturationRange
+     * @param lightnessRange
+     */
     static generateRandomColor(hueRange, saturationRange, lightnessRange) {
         if (hueRange.length == 0)
             hueRange = [0, 360];
@@ -47,6 +96,10 @@ export class wuColor {
         const lightness = Math.floor(Math.random() * lightnessRange[1] - lightnessRange[0]) + lightnessRange[0];
         return this.hslToRgb(this.correctHslColor({ h: hue, s: saturation, l: lightness }));
     }
+    /**
+     * Corrects the values of an hsl color to be within the valid range
+     * if for example a hue would be negative or above 360 it will be corrected to be within the range
+     */
     static correctHslColor(hsl) {
         return {
             h: Math.floor(Math.max(0, Math.min(360, hsl.h))),
@@ -54,6 +107,10 @@ export class wuColor {
             l: Math.floor(Math.max(0, Math.min(100, hsl.l)))
         };
     }
+    /**
+     * Corrects the values of an rgb color to be within the valid range
+     * if any part is below 0 or above 255 it will be corrected to be within the range
+     */
     static correctRgbColor(rgb) {
         return {
             r: Math.floor(Math.max(0, Math.min(255, rgb.r))),
@@ -61,9 +118,15 @@ export class wuColor {
             b: Math.floor(Math.max(0, Math.min(255, rgb.b)))
         };
     }
+    /**
+     * Corrects the values of a hex color to be within the valid range
+     * if the color is below 000000 or above FFFFFF it will be corrected to be within the range
+     * @param hex
+     */
     static correctHexColor(hex) {
         return this.rgbToHex(this.correctRgbColor(this.hexToRgb(hex)));
     }
+    //region other to rgb
     static anyToRgb(color) {
         if (typeof color === 'string')
             return this.hexToRgb(color);
@@ -74,6 +137,7 @@ export class wuColor {
     }
     static hexToRgb(hex) {
         hex = hex.replace(/^#/, '');
+        // Parse the hex string into its RGB components
         let r = parseInt(hex.substring(0, 2), 16) / 255;
         let g = parseInt(hex.substring(2, 4), 16) / 255;
         let b = parseInt(hex.substring(4, 6), 16) / 255;
@@ -91,6 +155,8 @@ export class wuColor {
             b: Math.round(f(4) * 255)
         };
     }
+    //endregion
+    //region from rgb to other
     static rgbToHsl(rgb) {
         let r = rgb.r / 255;
         let g = rgb.b / 255;
@@ -121,6 +187,7 @@ export class wuColor {
         let b = rgb.b <= 0.03928 ? rgb.b / 12.92 : Math.pow((rgb.b + 0.055) / 1.055, 2.4);
         return { r: r, g: g, b: b };
     }
+    //endregion
     static anyToString(color) {
         if (typeof color === 'string')
             return color;
@@ -130,4 +197,4 @@ export class wuColor {
             return `rgb(${color.r},${color.g},${color.b})`;
     }
 }
-//# sourceMappingURL=wuColor.js.map
+exports.wuColor = wuColor;

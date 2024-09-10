@@ -14,6 +14,8 @@ export interface hslColor {
     l: number
 }
 
+//TODO blend modes
+
 /**
  * Functions for converting, manipulating and generating colors
  *
@@ -30,8 +32,8 @@ export class wuColor{
      * @param amount any number
      * @param wrap whether to wrap the hue around once the maximum is reached (361 -> 0 and -1 -> 360, -2 -> 359 etc.)
      */
-    static shiftHue(color: anyColor, amount: number, wrap: boolean): rgbColor {
-        let hsl = this.rgbToHSL(this.anyToRgb(color))
+    static shiftHue(color: anyColor, amount: number, wrap: boolean = false): rgbColor {
+        let hsl = this.rgbToHsl(this.anyToRgb(color))
 
         hsl.h = hsl.h + amount
 
@@ -49,8 +51,8 @@ export class wuColor{
      * @param amount
      * @param wrap whether to wrap the saturation around once the maximum is reached (101 -> 0 and -1 -> 100)
      */
-    static shiftSaturation(color: anyColor, amount: number, wrap: boolean): rgbColor {
-        let hsl = this.rgbToHSL(this.anyToRgb(color))
+    static shiftSaturation(color: anyColor, amount: number, wrap: boolean = false): rgbColor {
+        let hsl = this.rgbToHsl(this.anyToRgb(color))
 
         hsl.s = hsl.s + amount
 
@@ -68,8 +70,8 @@ export class wuColor{
      * @param amount any number
      * @param wrap whether to wrap the lightness around once the maximum is reached (101 -> 0 and -1 -> 100)
      */
-    static shiftLightness(color: anyColor, amount: number, wrap: boolean): rgbColor {
-        let hsl = this.rgbToHSL(this.anyToRgb(color))
+    static shiftLightness(color: anyColor, amount: number, wrap: boolean = false): rgbColor {
+        let hsl = this.rgbToHsl(this.anyToRgb(color))
 
         hsl.l = hsl.l + amount
 
@@ -84,7 +86,7 @@ export class wuColor{
      */
     static calculateContrastColor(color: anyColor): rgbColor {
         let rgb = this.anyToRgb(color)
-        let sRGB = this.rgbTosRGB(rgb)
+        let sRGB = this.rgbToSrgb(rgb)
 
         const luminance = 0.2126 * sRGB.r + 0.7152 * sRGB.g + 0.0722 * sRGB.b
 
@@ -173,7 +175,7 @@ export class wuColor{
         return {r: r, g: g, b: b}
     }
 
-    static hslToRgb = (hsl: hslColor) => {
+    static hslToRgb(hsl: hslColor): rgbColor {
         hsl.s /= 100
         hsl.l /= 100
         const k = (n: number) => (n + hsl.h / 30) % 12
@@ -192,15 +194,7 @@ export class wuColor{
 
     //region from rgb to other
 
-    static rgbTosRGB(rgb: rgbColor): rgbColor {
-        let r = rgb.r <= 0.03928 ? rgb.r / 12.92 : Math.pow((rgb.r + 0.055) / 1.055, 2.4)
-        let g = rgb.g <= 0.03928 ? rgb.g / 12.92 : Math.pow((rgb.g + 0.055) / 1.055, 2.4)
-        let b = rgb.b <= 0.03928 ? rgb.b / 12.92 : Math.pow((rgb.b + 0.055) / 1.055, 2.4)
-
-        return {r: r, g: g, b: b}
-    }
-
-    static rgbToHSL(rgb: rgbColor): hslColor {
+    static rgbToHsl(rgb: rgbColor): hslColor {
         let r = rgb.r / 255;
         let g = rgb.b / 255;
         let b = rgb.g / 255;
@@ -224,6 +218,15 @@ export class wuColor{
     static rgbToHex(rgb: rgbColor): string {
         return `#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1).toUpperCase()}`
     }
+
+    static rgbToSrgb(rgb: rgbColor): rgbColor {
+        let r = rgb.r <= 0.03928 ? rgb.r / 12.92 : Math.pow((rgb.r + 0.055) / 1.055, 2.4)
+        let g = rgb.g <= 0.03928 ? rgb.g / 12.92 : Math.pow((rgb.g + 0.055) / 1.055, 2.4)
+        let b = rgb.b <= 0.03928 ? rgb.b / 12.92 : Math.pow((rgb.b + 0.055) / 1.055, 2.4)
+
+        return {r: r, g: g, b: b}
+    }
+
 
     //endregion
 

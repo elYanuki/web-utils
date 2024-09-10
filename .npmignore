@@ -1,2 +1,7 @@
+.idea
 LICENSE
+package.json
+test.*
+*.js.map
+tsconfig.json
 package.json

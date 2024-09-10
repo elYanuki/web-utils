@@ -1,5 +1,8 @@
-import { wuGeneral } from "./wuGeneral.js";
-export class wuAnimate {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.wuAnimate = void 0;
+const wuGeneral_1 = require("./wuGeneral");
+class wuAnimate {
     static shake(elem, duration = 200) {
         elem.animate([
             { transform: 'translateX(0)', rotate: '0deg' },
@@ -42,7 +45,7 @@ export class wuAnimate {
     static remove(elem, duration = 200) {
         elem.style.overflow = "hidden";
         elem.animate([
-            { opacity: 1, height: wuGeneral.smartHeight(elem) + "px" },
+            { opacity: 1, height: wuGeneral_1.wuGeneral.smartHeight(elem) + "px" },
             { opacity: 0, height: "0px" },
         ], {
             duration: duration,
@@ -96,7 +99,7 @@ export class wuAnimate {
     }
     static spinAnimation(element) {
         if (element.classList.contains('spinning'))
-            return;
+            return; //prevents adding multiple animations
         element.classList.add('spinning');
         let rotation = 0;
         let interval = setInterval(() => {
@@ -108,11 +111,11 @@ export class wuAnimate {
                 fill: 'forwards',
                 easing: 'ease-in-out'
             });
-            if (!document.body.contains(element)) {
+            if (!document.body.contains(element)) { //auto remove spinning if element is removed from DOM
                 clearInterval(interval);
                 element.classList.remove('spinning');
             }
         }, 500);
     }
 }
-//# sourceMappingURL=wuAnimate.js.map
+exports.wuAnimate = wuAnimate;

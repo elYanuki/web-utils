@@ -1,6 +1,6 @@
 import {wuText} from "./wuText"
 
-export default class wuTime{
+export class wuTime{
     static time = {
         msPerSecond: 1000,
         msPerMinute: 1000 * 60,

@@ -1,4 +1,7 @@
-import { wuText } from "./wuText.js";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.wuTime = void 0;
+const wuText_1 = require("./wuText");
 class wuTime {
     static toRelativeTimeString(timestamp) {
         timestamp = this.anyToDate(timestamp);
@@ -37,24 +40,27 @@ class wuTime {
             return Math.floor(timeMilliseconds / this.time.msPerDay) + ' days ' + timeDate.getHours() + 'hours';
         }
         else if (timeMilliseconds > this.time.msPerHour) {
-            return wuText.padNumber(timeDate.getHours(), 2) + ':' + wuText.padNumber(timeDate.getMinutes(), 2) + ':' + wuText.padNumber(timeDate.getSeconds(), 2);
+            return wuText_1.wuText.padNumber(timeDate.getHours(), 2) + ':' + wuText_1.wuText.padNumber(timeDate.getMinutes(), 2) + ':' + wuText_1.wuText.padNumber(timeDate.getSeconds(), 2);
         }
-        else {
-            return wuText.padNumber(timeDate.getMinutes(), 2) + ':' + wuText.padNumber(timeDate.getSeconds(), 2);
+        else /*if (timeMilliseconds > this.time.msPerMinute)*/ {
+            return wuText_1.wuText.padNumber(timeDate.getMinutes(), 2) + ':' + wuText_1.wuText.padNumber(timeDate.getSeconds(), 2);
         }
+        /*else {
+          return timeDate.getSeconds() + ' seconds';
+        }*/
     }
     static toFullDateTimeString(timestamp, options = { dateSeperator: '.', timeSeperator: ':' }) {
         timestamp = this.anyToDate(timestamp);
-        return wuText.padNumber(timestamp.getDate()) + options.dateSeperator +
-            wuText.padNumber(timestamp.getMonth() + 1) + options.dateSeperator +
+        return wuText_1.wuText.padNumber(timestamp.getDate()) + options.dateSeperator +
+            wuText_1.wuText.padNumber(timestamp.getMonth() + 1) + options.dateSeperator +
             timestamp.getFullYear().toString().substring(2, 4) + ' ' +
-            wuText.padNumber(timestamp.getHours()) + options.timeSeperator +
-            wuText.padNumber(timestamp.getMinutes());
+            wuText_1.wuText.padNumber(timestamp.getHours()) + options.timeSeperator +
+            wuText_1.wuText.padNumber(timestamp.getMinutes());
     }
     static toFullDateString(timestamp, options = { dateSeperator: '.' }) {
         timestamp = this.anyToDate(timestamp);
-        return wuText.padNumber(timestamp.getDate()) + options.dateSeperator +
-            wuText.padNumber(timestamp.getMonth() + 1) + options.dateSeperator +
+        return wuText_1.wuText.padNumber(timestamp.getDate()) + options.dateSeperator +
+            wuText_1.wuText.padNumber(timestamp.getMonth() + 1) + options.dateSeperator +
             timestamp.getFullYear().toString().substring(2, 4);
     }
     static anyToDate(timestamp) {
@@ -70,6 +76,7 @@ class wuTime {
             return timestamp;
     }
 }
+exports.wuTime = wuTime;
 wuTime.time = {
     msPerSecond: 1000,
     msPerMinute: 1000 * 60,
@@ -78,5 +85,3 @@ wuTime.time = {
     msPerMonth: 1000 * 60 * 60 * 24 * 30,
     msPerYear: 1000 * 60 * 60 * 24 * 30 * 12
 };
-export default wuTime;
-//# sourceMappingURL=wuTime.js.map
