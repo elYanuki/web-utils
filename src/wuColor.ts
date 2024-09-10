@@ -220,9 +220,6 @@ export class wuColor{
     //region from rgb to other
 
     static rgbToHsl(rgb: rgbColor): hslColor {
-
-        rgb.r = Math.round(rgb.r / 100 * 255)
-
         // make r, g, and b fractions of 1
         let r = rgb[0] / 255,
             g = rgb[1] / 255,
