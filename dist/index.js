@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Regex = exports.Time = exports.wuAnimate = exports.wuTime = exports.wuColor = exports.wuText = exports.wuGeneral = void 0;
+exports.Regex = exports.Time = exports.wuAnimate = exports.wuColor = exports.wuText = exports.wuGeneral = void 0;
 var wuGeneral_1 = require("./wuGeneral");
 Object.defineProperty(exports, "wuGeneral", { enumerable: true, get: function () { return wuGeneral_1.wuGeneral; } });
 var wuText_1 = require("./wuText");
 Object.defineProperty(exports, "wuText", { enumerable: true, get: function () { return wuText_1.wuText; } });
 var wuColor_1 = require("./wuColor");
 Object.defineProperty(exports, "wuColor", { enumerable: true, get: function () { return wuColor_1.wuColor; } });
-var wuTime_1 = require("./wuTime");
-Object.defineProperty(exports, "wuTime", { enumerable: true, get: function () { return wuTime_1.wuTime; } });
 var wuAnimate_1 = require("./wuAnimate");
 Object.defineProperty(exports, "wuAnimate", { enumerable: true, get: function () { return wuAnimate_1.wuAnimate; } });
 var wuConstants_1 = require("./wuConstants");

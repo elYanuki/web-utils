@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wuColor = void 0;
 const wuText_1 = require("./wuText");
+const wuGeneral_1 = require("./wuGeneral");
 //TODO blend modes
 /**
  * Functions for converting, manipulating and generating colors
@@ -104,6 +105,7 @@ class wuColor {
         const hue = Math.floor(Math.random() * hueRange[1] - hueRange[0]) + hueRange[0];
         const saturation = Math.floor(Math.random() * saturationRange[1] - saturationRange[0]) + saturationRange[0];
         const lightness = Math.floor(Math.random() * lightnessRange[1] - lightnessRange[0]) + lightnessRange[0];
+        console.log(hue, saturation, lightness);
         return this.hslToRgb(this.correctHslColor({ h: hue, s: saturation, l: lightness }));
     }
     /**
@@ -154,73 +156,39 @@ class wuColor {
         return { r: r, g: g, b: b };
     }
     static hslToRgb(hsl) {
-        let c = (1 - Math.abs(2 * hsl.l - 1)) * hsl.s, x = c * (1 - Math.abs((hsl.h / 60) % 2 - 1)), m = hsl.l - c / 2, r = 0, g = 0, b = 0;
-        if (0 <= hsl.h && hsl.h < 60) {
-            r = c;
-            g = x;
-            b = 0;
-        }
-        else if (60 <= hsl.h && hsl.h < 120) {
-            r = x;
-            g = c;
-            b = 0;
-        }
-        else if (120 <= hsl.h && hsl.h < 180) {
-            r = 0;
-            g = c;
-            b = x;
-        }
-        else if (180 <= hsl.h && hsl.h < 240) {
-            r = 0;
-            g = x;
-            b = c;
-        }
-        else if (240 <= hsl.h && hsl.h < 300) {
-            r = x;
-            g = 0;
-            b = c;
-        }
-        else if (300 <= hsl.h && hsl.h < 360) {
-            r = c;
-            g = 0;
-            b = x;
-        }
-        r = Math.round((r + m) * 255);
-        g = Math.round((g + m) * 255);
-        b = Math.round((b + m) * 255);
-        return { r: r, g: g, b: b };
+        let { h, s, l } = wuGeneral_1.wuGeneral.deepCopy(hsl);
+        s /= 100;
+        l /= 100;
+        const k = (n) => (n + h / 30) % 12;
+        const a = s * Math.min(l, 1 - l);
+        const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+        return {
+            r: Math.round(255 * f(0)),
+            g: Math.round(255 * f(8)),
+            b: Math.round(255 * f(4)),
+        };
     }
     //endregion
     //region from rgb to other
     static rgbToHsl(rgb) {
-        // make r, g, and b fractions of 1
-        let r = rgb[0] / 255, g = rgb[1] / 255, b = rgb[2] / 255, 
-        // find greatest and smallest channel values
-        cmin = Math.min(r, g, b), cmax = Math.max(r, g, b), delta = cmax - cmin, h = 0, s = 0, l = 0;
-        // calculate hue
-        // no difference
-        if (delta == 0)
-            h = 0;
-        // red is max
-        else if (cmax == r)
-            h = ((g - b) / delta) % 6;
-        // green is max
-        else if (cmax == g)
-            h = (b - r) / delta + 2;
-        // blue is max
-        else
-            h = (r - g) / delta + 4;
-        h = Math.round(h * 60);
-        // make negative hues positive behind 360°
-        if (h < 0)
-            h += 360;
-        // calculate lightness
-        l = (cmax + cmin) / 2;
-        // calculate saturation
-        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-        // multiply l and s by 100
-        s = +(s * 100).toFixed(1);
-        l = +(l * 100).toFixed(1);
+        rgb = wuGeneral_1.wuGeneral.deepCopy(rgb);
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        const l = Math.max(r, g, b);
+        const s = l - Math.min(r, g, b);
+        const h = s
+            ? l === r
+                ? (g - b) / s
+                : l === g
+                    ? 2 + (b - r) / s
+                    : 4 + (r - g) / s
+            : 0;
+        return [
+            60 * h < 0 ? 60 * h + 360 : 60 * h,
+            100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+            (100 * (2 * l - s)) / 2,
+        ];
         return { h: h, s: s, l: l };
     }
     static rgbToHex(rgb) {

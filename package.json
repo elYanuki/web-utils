@@ -7,6 +7,9 @@
   "files": [
     "/dist"
   ],
+  "include": [
+    "src/**/*.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/elYanuki/web-utils.git"

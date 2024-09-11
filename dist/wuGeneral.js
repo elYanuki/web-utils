@@ -41,5 +41,8 @@ class wuGeneral {
             timer = setTimeout(() => { func.apply(this, args); }, timeout);
         };
     }
+    static deepCopy(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
 }
 exports.wuGeneral = wuGeneral;

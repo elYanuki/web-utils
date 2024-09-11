@@ -16,4 +16,5 @@ export declare class wuGeneral {
      * @returns a debounced version of the input function
      */
     static debounce(func: Function, timeout?: number): (...args: any[]) => void;
+    static deepCopy(obj: any): any;
 }
