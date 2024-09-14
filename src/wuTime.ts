@@ -1,42 +1,34 @@
 import {wuText} from "./wuText"
+import {wuConstants} from "./wuConstants"
 
 export class wuTime{
-    static time = {
-        msPerSecond: 1000,
-        msPerMinute: 1000 * 60,
-        msPerHour: 1000 * 60 * 60,
-        msPerDay: 1000 * 60 * 60 * 24,
-        msPerMonth: 1000 * 60 * 60 * 24 * 30,
-        msPerYear: 1000 * 60 * 60 * 24 * 30 * 12
-    }
-
     static toRelativeTimeString(timestamp: Date | string | number): string {
         timestamp = this.anyToDate(timestamp)
 
         let timeElapsed = new Date().valueOf() - timestamp.valueOf();
 
-        if (timeElapsed < this.time.msPerMinute) {
+        if (timeElapsed < wuConstants.Time.msPerMinute) {
             return Math.round(timeElapsed / 1000) + ' seconds ago';
         }
 
-        else if (timeElapsed < this.time.msPerHour) {
-            return Math.round(timeElapsed / this.time.msPerMinute) + ' minutes ago';
+        else if (timeElapsed < wuConstants.Time.msPerHour) {
+            return Math.round(timeElapsed / wuConstants.Time.msPerMinute) + ' minutes ago';
         }
 
-        else if (timeElapsed < this.time.msPerDay) {
-            return Math.round(timeElapsed / this.time.msPerHour) + ' hours ago';
+        else if (timeElapsed < wuConstants.Time.msPerDay) {
+            return Math.round(timeElapsed / wuConstants.Time.msPerHour) + ' hours ago';
         }
 
-        else if (timeElapsed < this.time.msPerMonth) {
-            return Math.round(timeElapsed / this.time.msPerDay) + ' days ago';
+        else if (timeElapsed < wuConstants.Time.msPerMonth) {
+            return Math.round(timeElapsed / wuConstants.Time.msPerDay) + ' days ago';
         }
 
-        else if (timeElapsed < this.time.msPerYear) {
-            return Math.round(timeElapsed / this.time.msPerMonth) + ' months ago';
+        else if (timeElapsed < wuConstants.Time.msPerYear) {
+            return Math.round(timeElapsed / wuConstants.Time.msPerMonth) + ' months ago';
         }
 
         else {
-            return Math.round(timeElapsed / this.time.msPerYear) + ' years ago';
+            return Math.round(timeElapsed / wuConstants.Time.msPerYear) + ' years ago';
         }
     }
 
@@ -46,19 +38,19 @@ export class wuTime{
         let timeDate = this.anyToDate(timestamp);
         let timeMilliseconds = timeDate.valueOf();
 
-        if(timeMilliseconds > this.time.msPerYear) {
-            return timeDate.getFullYear() + ' years ' + Math.floor(timeMilliseconds % this.time.msPerYear / this.time.msPerMonth) + ' months';
+        if(timeMilliseconds > wuConstants.Time.msPerYear) {
+            return timeDate.getFullYear() + ' years ' + Math.floor(timeMilliseconds % wuConstants.Time.msPerYear / wuConstants.Time.msPerMonth) + ' months';
         }
-        else if (timeMilliseconds > this.time.msPerMonth) {
-            return Math.floor(timeMilliseconds / this.time.msPerMonth) + ' months ' + Math.floor(timeMilliseconds % this.time.msPerMonth / this.time.msPerDay) + 'days';
+        else if (timeMilliseconds > wuConstants.Time.msPerMonth) {
+            return Math.floor(timeMilliseconds / wuConstants.Time.msPerMonth) + ' months ' + Math.floor(timeMilliseconds % wuConstants.Time.msPerMonth / wuConstants.Time.msPerDay) + 'days';
         }
-        else if (timeMilliseconds > this.time.msPerDay) {
-            return Math.floor(timeMilliseconds / this.time.msPerDay) + ' days ' + timeDate.getHours() + 'hours';
+        else if (timeMilliseconds > wuConstants.Time.msPerDay) {
+            return Math.floor(timeMilliseconds / wuConstants.Time.msPerDay) + ' days ' + timeDate.getHours() + 'hours';
         }
-        else if (timeMilliseconds > this.time.msPerHour) {
+        else if (timeMilliseconds > wuConstants.Time.msPerHour) {
             return wuText.padNumber(timeDate.getHours(),2) + ':' + wuText.padNumber(timeDate.getMinutes(),2) + ':' + wuText.padNumber(timeDate.getSeconds(),2);
         }
-        else /*if (timeMilliseconds > this.time.msPerMinute)*/ {
+        else /*if (timeMilliseconds > wuConstants.Time.msPerMinute)*/ {
             return wuText.padNumber(timeDate.getMinutes(),2) + ':' + wuText.padNumber(timeDate.getSeconds(),2);
         }
         /*else {

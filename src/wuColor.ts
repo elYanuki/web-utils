@@ -131,8 +131,6 @@ export class wuColor{
 
         const lightness = Math.floor(Math.random() * lightnessRange[1] - lightnessRange[0]) + lightnessRange[0]
 
-        console.log(hue, saturation, lightness)
-
         return this.hslToRgb(this.correctHslColor({h: hue, s: saturation, l: lightness}))
     }
 
@@ -213,25 +211,23 @@ export class wuColor{
     static rgbToHsl(rgb: rgbColor): hslColor {
         rgb = wuGeneral.deepCopy(rgb)
 
-        r /= 255;
-        g /= 255;
-        b /= 255;
-        const l = Math.max(r, g, b);
-        const s = l - Math.min(r, g, b);
+        rgb.r /= 255;
+        rgb.g /= 255;
+        rgb.b /= 255;
+        const l = Math.max(rgb.r, rgb.g, rgb.b);
+        const s = l - Math.min(rgb.r, rgb.g, rgb.b);
         const h = s
-            ? l === r
-                ? (g - b) / s
-                : l === g
-                    ? 2 + (b - r) / s
-                    : 4 + (r - g) / s
+            ? l === rgb.r
+                ? (rgb.g - rgb.b) / s
+                : l === rgb.g
+                    ? 2 + (rgb.b - rgb.r) / s
+                    : 4 + (rgb.r - rgb.g) / s
             : 0;
-        return [
-            60 * h < 0 ? 60 * h + 360 : 60 * h,
-            100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
-            (100 * (2 * l - s)) / 2,
-        ];
-
-        return {h: h, s: s, l: l}
+        return {
+            h: 60 * h < 0 ? 60 * h + 360 : 60 * h,
+            s: 100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+            l: (100 * (2 * l - s)) / 2,
+        }
     }
 
     static rgbToHex(rgb: rgbColor): string {

@@ -42,6 +42,10 @@ export class wuGeneral {
         };
     }
 
+    /**
+     * creates an actual deep copy of an object - removing all references to the old object
+     * @param obj
+     */
     static deepCopy(obj: any){
         return JSON.parse(JSON.stringify(obj))
     }

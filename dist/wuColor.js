@@ -105,7 +105,6 @@ class wuColor {
         const hue = Math.floor(Math.random() * hueRange[1] - hueRange[0]) + hueRange[0];
         const saturation = Math.floor(Math.random() * saturationRange[1] - saturationRange[0]) + saturationRange[0];
         const lightness = Math.floor(Math.random() * lightnessRange[1] - lightnessRange[0]) + lightnessRange[0];
-        console.log(hue, saturation, lightness);
         return this.hslToRgb(this.correctHslColor({ h: hue, s: saturation, l: lightness }));
     }
     /**
@@ -172,24 +171,23 @@ class wuColor {
     //region from rgb to other
     static rgbToHsl(rgb) {
         rgb = wuGeneral_1.wuGeneral.deepCopy(rgb);
-        r /= 255;
-        g /= 255;
-        b /= 255;
-        const l = Math.max(r, g, b);
-        const s = l - Math.min(r, g, b);
+        rgb.r /= 255;
+        rgb.g /= 255;
+        rgb.b /= 255;
+        const l = Math.max(rgb.r, rgb.g, rgb.b);
+        const s = l - Math.min(rgb.r, rgb.g, rgb.b);
         const h = s
-            ? l === r
-                ? (g - b) / s
-                : l === g
-                    ? 2 + (b - r) / s
-                    : 4 + (r - g) / s
+            ? l === rgb.r
+                ? (rgb.g - rgb.b) / s
+                : l === rgb.g
+                    ? 2 + (rgb.b - rgb.r) / s
+                    : 4 + (rgb.r - rgb.g) / s
             : 0;
-        return [
-            60 * h < 0 ? 60 * h + 360 : 60 * h,
-            100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
-            (100 * (2 * l - s)) / 2,
-        ];
-        return { h: h, s: s, l: l };
+        return {
+            h: 60 * h < 0 ? 60 * h + 360 : 60 * h,
+            s: 100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+            l: (100 * (2 * l - s)) / 2,
+        };
     }
     static rgbToHex(rgb) {
         return `#${((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b).toString(16).slice(1).toUpperCase()}`;

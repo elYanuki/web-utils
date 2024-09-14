@@ -41,6 +41,10 @@ class wuGeneral {
             timer = setTimeout(() => { func.apply(this, args); }, timeout);
         };
     }
+    /**
+     * creates an actual deep copy of an object - removing all references to the old object
+     * @param obj
+     */
     static deepCopy(obj) {
         return JSON.parse(JSON.stringify(obj));
     }

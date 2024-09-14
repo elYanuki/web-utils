@@ -16,5 +16,9 @@ export declare class wuGeneral {
      * @returns a debounced version of the input function
      */
     static debounce(func: Function, timeout?: number): (...args: any[]) => void;
+    /**
+     * creates an actual deep copy of an object - removing all references to the old object
+     * @param obj
+     */
     static deepCopy(obj: any): any;
 }
