@@ -1,6 +1,5 @@
 import './styles/main.css'
-import {wuGeneral, wuText, wuColor, wuTime} from "@yanikkendler/web-utils"
-import {wuConstants, wuDuration} from "@yanikkendler/web-utils/dist"
+import {wuGeneral, wuText, wuColor, wuTime, wuConstants, wuDuration} from "@yanikkendler/web-utils"
 
 /*
 * testing web util time
@@ -13,6 +12,12 @@ console.log(wuTime.toDateTimeString(Date.now(), {yearDigits: 4, timeSeparator: "
 console.log(wuTime.toDateTimeString("2024-06-15"))
 console.log(wuTime.toDateString("2024-06-15"))
 console.log(wuTime.toRelativeString(new Date(Date.now() + wuConstants.Time.msPerDay)))
+console.log("should be now", wuTime.toRelativeString(new Date(Date.now()), {nowRangeMs: 1000}))
+console.log("should be time", wuTime.toRelativeString(new Date(Date.now()), {nowRangeMs: 0}))
+
+const num = 23
+
+console.log(wuTime.handleInvalid(num, (date) => wuTime.toDateTimeString(date, {yearDigits: 4, showSeconds: true}), "invalid"))
 
 console.log("WU DURATION")
 

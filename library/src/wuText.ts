@@ -1,4 +1,5 @@
 import {wuConstants} from "./wuConstants"
+import {wuTime} from "./wuTime"
 
 /**
  * Functions for working with strings in various ways
@@ -81,7 +82,7 @@ export class wuText{
     static numberToLetter(number: number, fontCase: "upper" |"lower" = "upper"): string | null {
         if(number == undefined) return null
 
-        number = this.wrapNumber(number, 0, 25)
+        number = wuText.wrapNumber(number, 0, 25)
         return fontCase == "lower" ? wuConstants.Alphabet.lower[number] : wuConstants.Alphabet.upper[number]
     }
 

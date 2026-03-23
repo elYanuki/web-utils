@@ -36,13 +36,13 @@ export class wuColor{
      * @param wrap whether to wrap the hue around once the maximum is reached (361 -> 0 and -1 -> 360, -2 -> 359 etc.)
      */
     static shiftHue(color: AnyColor, amount: number, wrap: boolean = false): rgbColor {
-        let hsl = this.rgbToHsl(this.anyToRgb(color))
+        let hsl = wuColor.rgbToHsl(wuColor.anyToRgb(color))
 
         hsl.h = hsl.h + amount
 
         if(wrap) hsl.h = wuText.wrapNumber(hsl.h, 0 ,360)
 
-        return this.hslToRgb(this.correctHslColor(hsl))
+        return wuColor.hslToRgb(wuColor.correctHslColor(hsl))
     }
 
     /**
@@ -55,13 +55,13 @@ export class wuColor{
      * @param wrap whether to wrap the saturation around once the maximum is reached (101 -> 0 and -1 -> 100)
      */
     static shiftSaturation(color: AnyColor, amount: number, wrap: boolean = false): rgbColor {
-        let hsl = this.rgbToHsl(this.anyToRgb(color))
+        let hsl = wuColor.rgbToHsl(wuColor.anyToRgb(color))
 
         hsl.s = hsl.s + amount
 
         if(wrap) hsl.l = wuText.wrapNumber(hsl.l, 0 ,100)
 
-        return this.hslToRgb(this.correctHslColor(hsl))
+        return wuColor.hslToRgb(wuColor.correctHslColor(hsl))
     }
 
     /**
@@ -74,13 +74,13 @@ export class wuColor{
      * @param wrap whether to wrap the lightness around once the maximum is reached (101 -> 0 and -1 -> 100)
      */
     static shiftLightness(color: AnyColor, amount: number, wrap: boolean = false): rgbColor {
-        let hsl = this.rgbToHsl(this.anyToRgb(color))
+        let hsl = wuColor.rgbToHsl(wuColor.anyToRgb(color))
 
         hsl.l = hsl.l + amount
 
         if(wrap) hsl.l = wuText.wrapNumber(hsl.l, 0 ,100)
 
-        return this.hslToRgb(this.correctHslColor(hsl))
+        return wuColor.hslToRgb(wuColor.correctHslColor(hsl))
     }
 
     /**
@@ -88,17 +88,17 @@ export class wuColor{
      * @param color
      */
     static calculateContrastColor(color: AnyColor): rgbColor {
-        let luminance = this.calculateLuminance(this.anyToRgb(color))
+        let luminance = wuColor.calculateLuminance(wuColor.anyToRgb(color))
 
         return luminance < 0.5 ? {r:255, g:255, b:255} : {r:0, g:0, b:0}
     }
 
     /**
-     * calculates the luminance of a given color this is different from the lightness in hsl as it takes into account how the human eye perceives brightness
+     * calculates the luminance of a given color wuColor is different from the lightness in hsl as it takes into account how the human eye perceives brightness
      * @param color
      */
     static calculateLuminance(color: AnyColor): number {
-        let rgb = this.anyToRgb(color)
+        let rgb = wuColor.anyToRgb(color)
 
         let a = [rgb.r, rgb.g, rgb.b].map(function (v) {
             v /= 255;
@@ -133,7 +133,7 @@ export class wuColor{
 
         const lightness = Math.floor(Math.random() * lightnessRange[1] - lightnessRange[0]) + lightnessRange[0]
 
-        return this.hslToRgb(this.correctHslColor({h: hue, s: saturation, l: lightness}))
+        return wuColor.hslToRgb(wuColor.correctHslColor({h: hue, s: saturation, l: lightness}))
     }
 
     /**
@@ -166,14 +166,14 @@ export class wuColor{
      * @param hex
      */
     static correctHexColor(hex: string): string {
-        return this.rgbToHex(this.correctRgbColor(this.hexToRgb(hex)))
+        return wuColor.rgbToHex(wuColor.correctRgbColor(wuColor.hexToRgb(hex)))
     }
 
     //region other to rgb
 
     static anyToRgb(color: AnyColor): rgbColor {
-        if(typeof color === 'string') return this.hexToRgb(color)
-        else if('h' in color) return this.hslToRgb(color)
+        if(typeof color === 'string') return wuColor.hexToRgb(color)
+        else if('h' in color) return wuColor.hslToRgb(color)
         else return color
     }
 

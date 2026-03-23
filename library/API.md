@@ -211,7 +211,7 @@ returns black or white depending on which color would have the best contrast to 
 <a name="wuColor.calculateLuminance"></a>
 
 ### wuColor.calculateLuminance(color)
-calculates the luminance of a given color this is different from the lightness in hsl as it takes into account how the human eye perceives brightness
+calculates the luminance of a given color wuColor is different from the lightness in hsl as it takes into account how the human eye perceives brightness
 
 **Kind**: static method of [<code>wuColor</code>](#wuColor)  
 
@@ -600,7 +600,7 @@ a timestamp 5 hours in the past would return "5 hours, 23 minutes ago"
 | Param | Description |
 | --- | --- |
 | timestamp | Date object, time string or timestamp in milliseconds |
-| options | precision and separator |
+| options | precision, separator and nowRangeMs |
 
 <a name="wuTime.toDateTimeString"></a>
 

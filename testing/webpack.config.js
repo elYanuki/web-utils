@@ -1,7 +1,7 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const BundleAnalyzerPlugin =
-  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   mode: 'development',
@@ -10,7 +10,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name][contenthash].js',
+    // 2. Removed [contenthash] for development to fix HMR
+    filename: '[name].js',
     clean: true,
     assetModuleFilename: '[name][ext]',
   },
@@ -24,6 +25,8 @@ module.exports = {
     hot: true,
     compress: true,
     historyApiFallback: true,
+    // 3. Ensure liveReload doesn't conflict with hot
+    liveReload: true,
   },
   module: {
     rules: [
@@ -53,6 +56,10 @@ module.exports = {
       filename: 'index.html',
       template: 'src/template.html',
     }),
-    new BundleAnalyzerPlugin(),
+    // 4. Explicitly add the HMR plugin
+    new webpack.HotModuleReplacementPlugin(),
+    // Tip: You might want to disable this during active coding
+    // as it pops up a new tab every time you build
+    // new BundleAnalyzerPlugin(),
   ],
 }

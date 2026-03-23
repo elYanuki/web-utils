@@ -20,7 +20,8 @@ export interface TimePieces {
 
 export interface RelativeStringOptions {
     precision?: 1 | 2 | 3,
-    separator?: string
+    separator?: string,
+    nowRangeMs?: number
 }
 
 export interface DateStringOptions {
@@ -30,7 +31,7 @@ export interface DateStringOptions {
 
 export interface TimeStringOptions {
     timeSeparator?: string,
-    showMilliseconds?: boolean
+    showSeconds?: boolean
 }
 
 export interface DateTimeStringOptions extends DateStringOptions, TimeStringOptions{
@@ -50,7 +51,7 @@ export class wuTime{
      * @returns either the alternative or the result of the worker function
      */
     static handleInvalid(timestamp: CouldBeDateOrNull, worker: (timestamp: Date) => string, alternative: string): string{
-        const date = this.anyToDate(timestamp)
+        const date = wuTime.anyToDate(timestamp)
 
         if(!date)
             return alternative
@@ -89,7 +90,7 @@ export class wuTime{
      * @returns TimePieces object or null if the timestamp is invalid
      */
     static toSplitPieces(timestamp: CouldBeDateOrNull): TimePieces | null {
-        let date = this.anyToDate(timestamp)
+        let date = wuTime.anyToDate(timestamp)
 
         if(!date)
             return null
@@ -110,29 +111,33 @@ export class wuTime{
      * a timestamp 5 hours into the future would return "5 hours, 23 minutes from now"
      * a timestamp 5 hours in the past would return "5 hours, 23 minutes ago"
      * @param timestamp Date object, time string or timestamp in milliseconds
-     * @param options precision and separator
+     * @param options precision, separator and nowRangeMs
      * @returns result string or null if the timestamp is invalid
      */
     static toRelativeString(
         timestamp: CouldBeDateOrNull,
         options: RelativeStringOptions = {}
     ): string | null {
-        const date = this.anyToDate(timestamp)
+        const date = wuTime.anyToDate(timestamp)
 
         if(!date)
             return null
 
         const {
             precision = 2,
-            separator = ", "
+            separator = ", ",
+            nowRangeMs = 0,
         } = options;
 
+        if(nowRangeMs > 0 && Math.abs(Date.now() - date.valueOf()) < nowRangeMs) {
+            return "now"
+        }
 
-        if(Date.now() > date.valueOf()){ //in the past
-            return wuDuration.toDurationString(this.difference(timestamp, new Date()), {precision, separator}) + " ago"
+        if(Date.now() >= date.valueOf()){ //in the past
+            return wuDuration.toDurationString(wuTime.difference(timestamp, new Date()), {precision, separator}) + " ago"
         }
         else{// in the future
-            return wuDuration.toDurationString(this.difference(new Date(), timestamp), {precision, separator}) + " from now"
+            return wuDuration.toDurationString(wuTime.difference(new Date(), timestamp), {precision, separator}) + " from now"
         }
     }
 
@@ -146,14 +151,14 @@ export class wuTime{
         timestamp: CouldBeDateOrNull,
         options: DateTimeStringOptions = {}
     ): string | null{
-        if(!this.anyToDate(timestamp))
+        if(!wuTime.anyToDate(timestamp))
             return null
 
         const {dateTimeSeparator = " "} = options
 
-        return this.toDateString(timestamp, {dateSeparator: options.dateSeparator, yearDigits: options.yearDigits})
+        return wuTime.toDateString(timestamp, {dateSeparator: options.dateSeparator, yearDigits: options.yearDigits})
             + dateTimeSeparator +
-            this.toTimeString(timestamp, {timeSeparator: options.timeSeparator, showMilliseconds: options.showMilliseconds})
+            wuTime.toTimeString(timestamp, {timeSeparator: options.timeSeparator, showSeconds: options.showSeconds})
     }
 
     /**
@@ -166,7 +171,7 @@ export class wuTime{
         timestamp: CouldBeDateOrNull,
         options:  DateStringOptions = {}
     ): string | null {
-        const date = this.anyToDate(timestamp)
+        const date = wuTime.anyToDate(timestamp)
 
         if(!date)
             return null
@@ -196,21 +201,21 @@ export class wuTime{
         timestamp: CouldBeDateOrNull,
         options: TimeStringOptions = {}
     ): string | null {
-        const dateObject = this.anyToDate(timestamp)
+        const dateObject = wuTime.anyToDate(timestamp)
 
         if(!dateObject)
             return null
 
         const {
             timeSeparator = ":",
-            showMilliseconds = false
+            showSeconds = false
         } = options
 
 
         let result = wuText.pad<number>(dateObject.getHours(), 2, "0") +
             timeSeparator + wuText.pad<number>(dateObject.getMinutes(), 2, "0")
 
-        if(showMilliseconds)
+        if(showSeconds)
             result += timeSeparator + wuText.pad<number>(dateObject.getSeconds(), 2, "0")
 
         return result
@@ -226,8 +231,8 @@ export class wuTime{
         timestamp1: CouldBeDateOrNull,
         timestamp2: CouldBeDateOrNull
     ): number | null{
-        const date1 = this.anyToDate(timestamp1)
-        const date2 = this.anyToDate(timestamp2)
+        const date1 = wuTime.anyToDate(timestamp1)
+        const date2 = wuTime.anyToDate(timestamp2)
 
         if(!date1 || !date2)
             return null

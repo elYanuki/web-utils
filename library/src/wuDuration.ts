@@ -74,7 +74,7 @@ export class wuDuration {
             separator = ", "
         } = options;
 
-        const pieces = this.toSplitPieces(duration)
+        const pieces = wuDuration.toSplitPieces(duration)
 
         let result: string[]
 
@@ -94,10 +94,10 @@ export class wuDuration {
             result = [pieces.minutes + ' minute(s)', pieces.seconds + ' second(s)', pieces.milliseconds + ' millisecond(s)']
         }
         else if (pieces.seconds > 0) {
-            result = [pieces.seconds + ' second(s)', pieces.milliseconds + ' millisecond(s)', ""]
+            result = [pieces.seconds + ' second(s)', pieces.milliseconds + ' millisecond(s)']
         }
         else{
-            result = [pieces.milliseconds + ' milliseconds', "", ""]
+            result = [pieces.milliseconds + ' millisecond(s)']
         }
 
         return result.slice(0, precision).join(separator)
@@ -114,9 +114,9 @@ export class wuDuration {
     ){
         const {dateTimeSeparator = " "} = options
 
-        return this.toDateString(duration, {dateSeparator: options.dateSeparator, yearDigits: options.yearDigits})
+        return wuDuration.toDateString(duration, {dateSeparator: options.dateSeparator, yearDigits: options.yearDigits})
             + dateTimeSeparator +
-            this.toTimeString(duration, {timeSeparator: options.timeSeparator, showMilliseconds: options.showMilliseconds})
+            wuDuration.toTimeString(duration, {timeSeparator: options.timeSeparator, showSeconds: options.showSeconds})
     }
 
     /**
@@ -133,7 +133,7 @@ export class wuDuration {
             yearDigits = 2
         } = options
 
-        const pieces = this.toSplitPieces(duration)
+        const pieces = wuDuration.toSplitPieces(duration)
 
         let years = pieces.years.toString()
 
@@ -157,15 +157,15 @@ export class wuDuration {
     ) {
         const {
             timeSeparator = ":",
-            showMilliseconds = false,
+            showSeconds = false,
         } = options
 
-        const pieces = this.toSplitPieces(duration)
+        const pieces = wuDuration.toSplitPieces(duration)
 
         let result = wuText.pad<number>(pieces.hours, 2, "0") +
             timeSeparator + wuText.pad<number>(pieces.minutes, 2, "0")
 
-        if(showMilliseconds)
+        if(showSeconds)
             result += timeSeparator + wuText.pad<number>(pieces.seconds, 2, "0")
 
         return result
